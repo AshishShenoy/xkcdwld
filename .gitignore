@@ -1,0 +1,12 @@
+# IDE files.
+.vscode/
+.idea/
+
+# Python files.
+__pycache__
+
+# Log files
+*.log
+
+# Program specific.
+XKCD Comics/
