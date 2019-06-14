@@ -4,7 +4,7 @@ import re
 import os
 import sys
 from bs4 import BeautifulSoup
-from tqdm import tqdm
+from progressbar import progressbar
 
 
 def initLogging():
@@ -39,14 +39,13 @@ def getTotalComics(homepageSoup):
     return total
 
 
-# TODO: Add a progress bar.
 # TODO: Add multithreaded downloads.
 # TODO: Add GUI.
 def downloadComics(numToDownload, total, soup):
     os.makedirs("XKCD Comics", exist_ok = True)
     logging.info(f"{numToDownload} comics to be downloaded.")
 
-    for num in range(1, numToDownload + 1):
+    for num in progressbar(range(1, numToDownload + 1), redirect_stdout = True):
         comicNo = total - (num - 1)
 
         imageObject, downloadError = downloadComic(comicNo, soup)
@@ -78,6 +77,7 @@ def downloadComic(comicNo, soup):
         print(f"There was an error downloading comic {comicNo}.")
         logging.debug(f"Error downloading comic {comicNo}: {e}")
         error = True
+        return None, error
 
     return imageObject, error
 
