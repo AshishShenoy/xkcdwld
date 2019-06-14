@@ -8,10 +8,11 @@ libraries are needed:
 
 - requests
 - BeautifulSoup4
+- progressbar
 
 Install these with the command:
 
-    $ sudo pip3 install <library-name>
+    $ sudo pip3 install requests bs4 progressbar2
 
 
 Download:
