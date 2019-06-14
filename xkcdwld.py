@@ -27,11 +27,11 @@ countText = [
     for line in text.split("\n")
     if line.startswith("Permanent link to this comic: ")
 ][0]
-logging.debug("Text to extract NUMBER_OF_COMICS from: '{}'".format(countText))
+logging.debug(f"Text to extract NUMBER_OF_COMICS from: '{countText}'")
 numRegex = re.compile(r"https://xkcd\.com/(\d+)/")
 matchObject = numRegex.search(countText)
 numOfComics = int(matchObject.group(1))
-logging.debug("Number of comics = {}".format(numOfComics))
+logging.debug(f"Number of comics = {numOfComics}")
 
 
 # Allowing the option of downloading a specific number of latest comics through CL arguments.
@@ -40,7 +40,7 @@ if len(sys.argv) > 1:
     NUM_TO_DOWNLOAD = int(sys.argv[1])
 else:
     NUM_TO_DOWNLOAD = numOfComics
-logging.info("{} comics to be downloaded.".format(NUM_TO_DOWNLOAD))
+logging.info(f"{NUM_TO_DOWNLOAD} comics to be downloaded.")
 
 
 # Create image directory.
@@ -58,15 +58,15 @@ for num in range(1, NUM_TO_DOWNLOAD + 1):
     if imageElem != []:
         imageLink = imageElem[0].get("src") 
     else:
-        print("Could not find comic image {}".format(comicNum))
-        logging.debug("Could not find comic image {}".format(comicNum))
+        print(f"Could not find comic image {comicNum}")
+        logging.debug(f"Could not find comic image {comicNum}")
         downloadError = True
-    print("Downloading image {}, comic number {}...".format(num, comicNum))
+    print(f"Downloading image {num}, comic number {comicNum}...")
     try:
         imageObject = requests.get("http:" + imageLink, timeout = (3.05, 27))
     except Exception as e:
-        print("There was an error downloading comic {}".format(comicNum))
-        logging.debug("Error downloading comic {}".format(comicNum))
+        print(f"There was an error downloading comic {comicNum}")
+        logging.debug(f"Error downloading comic {comicNum}")
         downloadError = True
 
     # Writing the image to disk and numbering it.
@@ -84,12 +84,12 @@ for num in range(1, NUM_TO_DOWNLOAD + 1):
     prevImageLink = "http://www.xkcd.com" + subLink
     html = requests.get(prevImageLink, timeout = (3.05, 27))
     if html.status_code != 200:
-        print("{} images have been successfully downloaded.".format(num))
-        logging.critical("Unexpected error occurred while downloading comic image {}".format(comicNum))
+        print(f"{num} images have been successfully downloaded.")
+        logging.critical(f"Unexpected error occurred while downloading comic image {comicNum}")
         sys.exit("An unexpected error has occurred with the connection to the server.")
     xkcdSoup = bs4.BeautifulSoup(html.text, features = "html.parser")
 
 
 # Success Message.
-print("{} images have been successfully downloaded.".format(num))
-logging.info("{} images have been successfully downloaded.".format(num))
+print(f"{num} images have been successfully downloaded.")
+logging.info(f"{num} images have been successfully downloaded.")
